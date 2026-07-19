@@ -9,7 +9,7 @@
     "db:seed": "tsx src/db/seed/seed.ts",
     "dev": "tsx watch src/index.ts",
     "lint": "tsc -p tsconfig.json --noEmit",
-    "start": "node --experimental-specifier-resolution=node dist/index.js",
+    "start": "tsx src/index.ts",
     "test": "vitest run",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },

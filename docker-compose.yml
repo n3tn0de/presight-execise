@@ -1,4 +1,49 @@
+x-node-version: &node-version ${NODE_VERSION:-22-alpine}
+x-build-context: &build-context
+  presight-base: "service:build-common"
+x-common-bld: &common-bld
+  additional_contexts: *build-context
+x-common: &common
+  build: *common-bld
+  restart: on-failure
+
 services:
+  build-common:
+    build:
+      context: .
+      args:
+        NODE_VERSION: *node-version
+    restart: no
+    network_mode: none
+    labels:
+      - traefik.enable=false
+
+  api:
+    <<: *common
+    build:
+      <<: *common-bld
+      context: server
+    environment:
+      DATABASE_URL: postgres://${DB_USER}:${DB_PASSWORD}@postgres:${DB_PORT}/presight
+      SERVER_PORT: ${SERVER_PORT}
+      SERVER_HOST: 0.0.0.0
+    ports:
+      - ${SERVER_PORT}:${SERVER_PORT}
+    depends_on:
+      - postgres
+    labels:
+      - traefik.http.routers.api.rule=PathPrefix(`/api`)
+
+  webui:
+    <<: *common
+    build:
+      <<: *common-bld
+      context: client
+    depends_on:
+      - api
+    labels:
+      - traefik.http.routers.webui.rule=PathPrefix(`/`)
+
   postgres:
     image: postgres:alpine
     environment:
@@ -9,6 +54,24 @@ services:
       - postgres_data:/var/lib/postgresql
     ports:
       - ${DB_PORT}:${DB_PORT}
+    labels:
+      - traefik.enable=false
+
+  traefik:
+    image: traefik:v3.7
+    command:
+      - --api.insecure=true
+      - --accesslog=true
+
+      - --providers.docker
+
+      - --entrypoints.http.address=:80
+      - --entrypoints.http.asDefault=true
+    ports:
+      - 8080:80
+      - 8081:8080
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
 
 volumes:
   postgres_data:

@@ -93,6 +93,18 @@ The text filter value, selected hobbies, selected nationalities, sort field, and
 
 ## Local Setup
 
+### Docker Compose
+
+Simply run
+
+```bash
+docker compose up -d
+docker compose exec api yarn db:seed
+```
+
+and open http://localhost:8080/
+
+### Manual
 Install dependencies from the repository root:
 
 ```bash
