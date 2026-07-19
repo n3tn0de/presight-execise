@@ -42,7 +42,6 @@ export function DirectoryPage() {
           <span className="eyebrow">People directory</span>
           <h1>Find your people.</h1>
         </div>
-        <div className="header-mark">PS</div>
       </header>
       <main className="directory-layout">
         <FacetSidebar
