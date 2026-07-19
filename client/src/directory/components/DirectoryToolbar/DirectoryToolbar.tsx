@@ -21,7 +21,7 @@ export function DirectoryToolbar({
       </label>
       <div className="sort-controls">
         <label>
-          Sort{" "}
+          Sort:{" "}
           <select
             value={query.sortBy}
             onChange={(event) =>

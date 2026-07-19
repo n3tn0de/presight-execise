@@ -39,18 +39,22 @@ export function FacetSidebar({
           </button>
         </div>
       )}
-      <FacetGroup
-        title="Nationality"
-        values={facets.nationalities}
-        selected={query.nationality}
-        onChange={(value, checked) => onChange("nationality", value, checked)}
-      />
-      <FacetGroup
-        title="Hobbies"
-        values={facets.hobbies}
-        selected={query.hobby}
-        onChange={(value, checked) => onChange("hobby", value, checked)}
-      />
+
+      {!facetsError &&
+        <>
+        <FacetGroup
+          title="Nationality"
+          values={facets.nationalities}
+          selected={query.nationality}
+          onChange={(value, checked) => onChange("nationality", value, checked)}
+        />
+        <FacetGroup
+          title="Hobbies"
+          values={facets.hobbies}
+          selected={query.hobby}
+          onChange={(value, checked) => onChange("hobby", value, checked)}
+        />
+      </>}
     </aside>
   );
 }
