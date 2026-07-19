@@ -34,7 +34,7 @@ export function DirectoryPage() {
       );
     setQuery(nextQuery);
   };
-  const retry = () => update({ ...query });
+  const retry = state.retry;
   return (
     <div className="app-shell">
       <header className="site-header">

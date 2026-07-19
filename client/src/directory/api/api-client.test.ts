@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { DEFAULT_DIRECTORY_QUERY } from "@presight/shared";
-import { appendCursor, directoryApi } from "./api-client";
+import { directoryApi } from "./api-client";
 
 afterEach(() => vi.restoreAllMocks());
 
@@ -19,11 +19,5 @@ describe("directory API client", () => {
       "/api/users?nationality=Canadian&q=Ada",
     );
     expect(fetchMock.mock.calls[1][0]).toBe("/api/facets");
-  });
-
-  it("adds a cursor only to the subsequent users request", () => {
-    expect(appendCursor(DEFAULT_DIRECTORY_QUERY, "opaque").cursor).toBe(
-      "opaque",
-    );
   });
 });

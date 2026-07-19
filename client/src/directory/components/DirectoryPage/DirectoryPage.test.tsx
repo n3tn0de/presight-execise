@@ -1,4 +1,5 @@
 import "@testing-library/jest-dom/vitest";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
   cleanup,
   fireEvent,
@@ -28,6 +29,17 @@ const useDirectoryQuery = vi.hoisted(() =>
 );
 vi.mock("../../hooks/use-directory-query", () => ({ useDirectoryQuery }));
 
+function renderDirectoryPage() {
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false, gcTime: 0 } },
+  });
+  return render(
+    <QueryClientProvider client={queryClient}>
+      <DirectoryPage />
+    </QueryClientProvider>,
+  );
+}
+
 describe("DirectoryPage", () => {
   afterEach(cleanup);
   beforeEach(() => {
@@ -39,7 +51,7 @@ describe("DirectoryPage", () => {
   });
 
   it("restores URL state in controls", () => {
-    render(<DirectoryPage />);
+    renderDirectoryPage();
     expect(screen.getByPlaceholderText(/search/i)).toHaveValue("Ada");
     expect(
       screen.getByRole("button", { name: /ascending/i }),
@@ -47,13 +59,13 @@ describe("DirectoryPage", () => {
   });
 
   it("renders facet loading independently from users", () => {
-    render(<DirectoryPage />);
+    renderDirectoryPage();
     expect(screen.getAllByText(/loading filters/i)).not.toHaveLength(0);
     expect(screen.getAllByText(/people directory/i)).not.toHaveLength(0);
   });
 
   it("restores query state from browser history without rewriting the URL", async () => {
-    render(<DirectoryPage />);
+    renderDirectoryPage();
     const replaceState = vi.spyOn(window.history, "replaceState");
     window.history.pushState(null, "", "/?q=Grace&sortBy=age");
     window.dispatchEvent(new PopStateEvent("popstate"));
@@ -66,7 +78,7 @@ describe("DirectoryPage", () => {
   });
 
   it("pushes a history entry for user-driven query changes", () => {
-    render(<DirectoryPage />);
+    renderDirectoryPage();
     const pushState = vi.spyOn(window.history, "pushState");
 
     fireEvent.change(screen.getByPlaceholderText(/search/i), {
@@ -84,7 +96,7 @@ describe("DirectoryPage", () => {
   });
 
   it("restores each URL when navigating backward and forward", async () => {
-    render(<DirectoryPage />);
+    renderDirectoryPage();
     fireEvent.change(screen.getByPlaceholderText(/search/i), {
       target: { value: "Grace" },
     });

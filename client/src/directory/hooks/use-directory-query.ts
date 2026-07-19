@@ -1,112 +1,110 @@
-import { useEffect, useReducer, useRef } from "react";
-import type { DirectoryQuery } from "@presight/shared";
-import { directoryApi, appendCursor } from "../api/api-client";
-import {
-  directoryReducer,
-  initialDirectoryState,
-} from "../state/directory-state";
+import { useRef } from "react";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import type {
+  DirectoryQuery,
+  FacetsResponse,
+  UsersResponse,
+} from "@presight/shared";
+import { directoryApi } from "../api/api-client";
+
+const EMPTY_FACETS: FacetsResponse = { hobbies: [], nationalities: [] };
+
+function userState(query: DirectoryQuery) {
+  return {
+    q: query.q,
+    nationality: [...query.nationality].sort(),
+    hobby: [...query.hobby].sort(),
+    sortBy: query.sortBy,
+    sortDir: query.sortDir,
+    limit: query.limit,
+  };
+}
+
+function facetState(query: DirectoryQuery) {
+  return {
+    q: query.q,
+    nationality: [...query.nationality].sort(),
+    hobby: [...query.hobby].sort(),
+  };
+}
+
+function errorMessage(reason: unknown, fallback: string): string {
+  return reason instanceof Error ? reason.message : fallback;
+}
+
+function initialQuery(query: DirectoryQuery): DirectoryQuery {
+  const withoutCursor = { ...query };
+  delete withoutCursor.cursor;
+  return withoutCursor;
+}
 
 export function useDirectoryQuery(query: DirectoryQuery) {
-  const [state, dispatch] = useReducer(
-    directoryReducer,
+  const usersQuery = useInfiniteQuery({
+    queryKey: ["directory", "users", userState(query)],
+    initialPageParam: undefined as string | undefined,
+    queryFn: ({ pageParam, signal }) =>
+      directoryApi.users(
+        pageParam === undefined
+          ? initialQuery(query)
+          : { ...query, cursor: pageParam },
+        signal,
+      ),
+    getNextPageParam: (lastPage: UsersResponse) =>
+      lastPage.hasMore ? (lastPage.nextCursor ?? undefined) : undefined,
+  });
+  const facetsQuery = useQuery({
+    queryKey: ["directory", "facets", facetState(query)],
+    queryFn: ({ signal }) => directoryApi.facets(query, signal),
+  });
+  const appendInFlight = useRef(false);
+
+  const pages = usersQuery.data?.pages ?? [];
+  const users = pages.flatMap((page) => page.items);
+  const lastPage = pages.at(-1);
+  const usersError = errorMessage(usersQuery.error, "Unable to load users");
+  const facetsError = errorMessage(facetsQuery.error, "Unable to load filters");
+  const appendError = usersQuery.isFetchNextPageError ? usersError : null;
+
+  return {
+    users,
+    facets: facetsQuery.data ?? EMPTY_FACETS,
+    loading: usersQuery.isPending || usersQuery.isRefetching,
+    loadingMore: usersQuery.isFetchingNextPage,
+    facetsLoading: facetsQuery.isPending || facetsQuery.isRefetching,
+    error:
+      usersQuery.error && !usersQuery.isFetchNextPageError ? usersError : null,
+    appendError,
+    facetsError: facetsQuery.error ? facetsError : null,
+    hasMore: usersQuery.hasNextPage ?? lastPage?.hasMore ?? false,
+    nextCursor: lastPage?.nextCursor ?? null,
+    loadMore: () => {
+      if (
+        !appendInFlight.current &&
+        !usersQuery.isFetchingNextPage &&
+        usersQuery.hasNextPage
+      ) {
+        appendInFlight.current = true;
+        void usersQuery.fetchNextPage().finally(() => {
+          appendInFlight.current = false;
+        });
+      }
+    },
+    retryAppend: () => {
+      if (
+        !appendInFlight.current &&
+        !usersQuery.isFetchingNextPage &&
+        usersQuery.hasNextPage
+      ) {
+        appendInFlight.current = true;
+        void usersQuery.fetchNextPage().finally(() => {
+          appendInFlight.current = false;
+        });
+      }
+    },
+    retry: () => {
+      void usersQuery.refetch();
+      void facetsQuery.refetch();
+    },
     query,
-    initialDirectoryState,
-  );
-  const version = useRef(0);
-  const appendController = useRef<AbortController | null>(null);
-
-  useEffect(() => {
-    const requestVersion = ++version.current;
-    const controller = new AbortController();
-    appendController.current?.abort();
-    appendController.current = null;
-    dispatch({ type: "queryChanged", query });
-    dispatch({ type: "usersStarted", append: false });
-    dispatch({ type: "facetsStarted" });
-    directoryApi
-      .users(query, controller.signal)
-      .then((result) => {
-        if (!controller.signal.aborted && requestVersion === version.current)
-          dispatch({ type: "usersSucceeded", ...result, append: false });
-      })
-      .catch((reason: unknown) => {
-        if (!controller.signal.aborted && requestVersion === version.current)
-          dispatch({
-            type: "usersFailed",
-            message:
-              reason instanceof Error ? reason.message : "Unable to load users",
-            append: false,
-          });
-      });
-    directoryApi
-      .facets(query, controller.signal)
-      .then((facets) => {
-        if (!controller.signal.aborted && requestVersion === version.current)
-          dispatch({ type: "facetsSucceeded", facets });
-      })
-      .catch((reason: unknown) => {
-        if (!controller.signal.aborted && requestVersion === version.current)
-          dispatch({
-            type: "facetsFailed",
-            message:
-              reason instanceof Error
-                ? reason.message
-                : "Unable to load filters",
-          });
-      });
-    return () => {
-      controller.abort();
-      appendController.current?.abort();
-      appendController.current = null;
-    };
-  }, [query]);
-
-  const loadMore = () => {
-    if (
-      !state.hasMore ||
-      !state.nextCursor ||
-      state.loading ||
-      state.loadingMore ||
-      appendController.current
-    )
-      return;
-    const requestVersion = version.current;
-    const controller = new AbortController();
-    appendController.current = controller;
-    dispatch({ type: "usersStarted", append: true });
-    directoryApi
-      .users(appendCursor(query, state.nextCursor), controller.signal)
-      .then((result) => {
-        if (
-          requestVersion === version.current &&
-          appendController.current === controller
-        )
-          dispatch({ type: "usersSucceeded", ...result, append: true });
-      })
-      .catch((reason: unknown) => {
-        if (
-          requestVersion === version.current &&
-          appendController.current === controller &&
-          !(reason instanceof DOMException && reason.name === "AbortError")
-        )
-          dispatch({
-            type: "usersFailed",
-            message:
-              reason instanceof Error
-                ? reason.message
-                : "Unable to load more users",
-            append: true,
-          });
-      })
-      .finally(() => {
-        if (appendController.current === controller)
-          appendController.current = null;
-      });
   };
-
-  const retryAppend = () => {
-    if (!state.loadingMore) loadMore();
-  };
-
-  return { ...state, loadMore, retryAppend };
 }

@@ -30,10 +30,3 @@ export const directoryApi = {
     return get<FacetsResponse>("/api/facets", query, signal);
   },
 };
-
-export function appendCursor(
-  query: DirectoryQuery,
-  cursor: string,
-): DirectoryQuery {
-  return { ...query, cursor };
-}
