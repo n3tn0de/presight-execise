@@ -1,17 +1,29 @@
 {
   "name": "presight-execise",
   "version": "1.0.0",
-  "repository": "",
-  "author": "",
   "license": "MIT",
   "workspaces": [
     "client",
-    "server"
+    "server",
+    "shared"
   ],
   "scripts": {
-    "start": "lerna run start"
+    "build": "lerna run build",
+    "db:migrate": "lerna run db:migrate --scope=presight-server",
+    "db:seed": "lerna run db:seed --scope=presight-server",
+    "predev": "npm run build --workspace=@presight/shared",
+    "dev": "lerna run dev --parallel --scope=presight-client --scope=presight-server",
+    "format": "prettier --write .",
+    "lint": "lerna run lint",
+    "start": "lerna run start",
+    "test": "lerna run test",
+    "typecheck": "lerna run typecheck"
   },
   "devDependencies": {
-    "lerna": "~8.2.1"
+    "@types/node": "^22.15.0",
+    "lerna": "^8.2.1",
+    "prettier": "^3.5.3",
+    "typescript": "^5.8.3",
+    "vitest": "^3.1.1"
   }
 }

@@ -1,13 +1,28 @@
 {
   "name": "presight-server",
   "version": "1.0.0",
-  "main": "index.js",
   "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.json && mkdir -p dist/db/migrations && cp src/db/migrations/*.sql dist/db/migrations/",
+    "db:migrate": "tsx src/db/migrate.ts",
+    "db:seed": "tsx src/db/seed.ts",
+    "dev": "tsx watch src/index.ts",
+    "lint": "tsc -p tsconfig.json --noEmit",
+    "start": "node dist/index.js",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
   "dependencies": {
-    "express": "~5.1.0"
+    "@presight/shared": "1.0.0",
+    "express": "~5.1.0",
+    "pg": "^8.13.3",
+    "zod": "^3.24.3"
   },
   "devDependencies": {
     "@types/express": "~5.0.1",
-    "@types/node-fetch": "~2.6.12"
+    "@types/node-fetch": "~2.6.12",
+    "@types/pg": "^8.11.11",
+    "tsx": "^4.19.3"
   }
 }

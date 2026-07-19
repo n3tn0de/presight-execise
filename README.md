@@ -6,8 +6,7 @@ The application should include:
 
 - A React client.
 - A Node.js API server.
-- A SQLite database used as the source of truth for user data.
-- Docker configuration for running the application locally.
+- A Postgres database used as the source of truth for user data.
 
 ## Scenario
 
@@ -17,7 +16,7 @@ Users need to browse a large directory of people, search by name, and narrow res
 
 ### Data Model
 
-Seed a SQLite database with enough records to make pagination, infinite scroll, search, and filter counts meaningful.
+Seed a Postgres database with enough records to make pagination, infinite scroll, search, and filter counts meaningful.
 
 Each user should have:
 
@@ -30,7 +29,7 @@ Each user should have:
 
 Choose a data model that supports the required behavior.
 
-SQLite must be the persisted source of user data.
+Postgres must be the persisted source of user data.
 
 ### API
 
@@ -92,11 +91,42 @@ When the text filter or selected filters change, the client must refresh both:
 
 The text filter value, selected hobbies, selected nationalities, sort field, and sort direction must be reflected in the URL query string. Reloading or sharing the URL should restore the same view state.
 
-## Implementation Notes
+## Local Setup
 
-- Keep the database setup easy to run locally.
-- Include seed logic or a documented command that creates the SQLite database.
-- Include a `Dockerfile` and `docker-compose.yml` that can run the application locally.
+Install dependencies from the repository root:
+
+```bash
+npm install
+```
+
+Create a local Postgres database and configure its connection string:
+
+```bash
+createdb presight
+export DATABASE_URL=postgres://postgres:postgres@localhost:5432/presight
+```
+
+Lerna runs the workspace scripts from the repository root:
+
+```bash
+npm run db:migrate
+npm run db:seed
+npm run dev
+```
+
+Migrations create the schema. The deterministic seed command loads repeatable local data on a clean database. Production never seeds automatically; run seeding explicitly only for local or test setup.
+
+To run workspaces separately, use `npm run dev --workspace=client` and `npm run dev --workspace=server`.
+
+Run tests, typechecking, and the production build with:
+
+```bash
+npm test
+npm run typecheck
+npm run build
+```
+
+Docker and Docker Compose are explicitly deferred and are not included.
 
 ## Evaluation Focus
 
@@ -107,13 +137,11 @@ We will pay particular attention to:
 - Smooth infinite scrolling with virtualization.
 - URL-synced state.
 - Clear loading, empty, and error states.
-- Easy local and Docker-based setup.
+- Easy local setup.
 
 ## Deliverables
 
 Please provide:
 
 - Source code for the React client and Node.js server.
-- A `Dockerfile` and `docker-compose.yml`.
 - Instructions for setup, database seeding, and running locally.
-- Instructions for running with Docker Compose.

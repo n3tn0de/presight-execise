@@ -1,4 +1,9 @@
 {
-  "npmClient": "yarn",
+  "npmClient": "npm",
+  "packages": [
+    "client",
+    "server",
+    "shared"
+  ],
   "version": "0.0.2"
 }
