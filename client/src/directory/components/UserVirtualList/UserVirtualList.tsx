@@ -73,7 +73,7 @@ export function UserVirtualList({
                 </div>
               );
             return (
-              <div data-testid="virtual-row" style={style}>
+              <div data-testid="virtual-row" className="user-row" style={style}>
                 <UserCard user={rows[index]} />
               </div>
             );

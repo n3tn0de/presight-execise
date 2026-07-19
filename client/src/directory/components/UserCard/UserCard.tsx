@@ -1,8 +1,9 @@
 import type { UserSummary } from "@presight/shared";
+import { HobbiesTooltip } from "../HobbiesTooltip/HobbiesTooltip";
 
 export function UserCard({ user }: { user: UserSummary }) {
   const visibleHobbies = user.hobbies.slice(0, 2);
-  const remaining = user.hobbies.length - visibleHobbies.length;
+  const remainingHobbies = user.hobbies.slice(2);
   return (
     <article className="user-card">
       {user.avatar ? (
@@ -28,8 +29,11 @@ export function UserCard({ user }: { user: UserSummary }) {
               {hobby}
             </span>
           ))}
-          {remaining > 0 && (
-            <span className="tag tag--muted">+{remaining}</span>
+          {remainingHobbies.length > 0 && (
+            <HobbiesTooltip
+              hobbies={remainingHobbies}
+              id={`hobbies-${user.id}`}
+            />
           )}
         </div>
       </div>
