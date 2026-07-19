@@ -33,6 +33,24 @@ describe("directory SQL builder", () => {
     expect(built.values[0]).toBe("%50\\%\\_\\\\off%");
   });
 
+  it("matches multiple search terms across first and last names", () => {
+    const built = buildUsersQuery({
+      ...query,
+      q: "Alan Wilson",
+      nationality: [],
+      hobby: [],
+    });
+
+    expect(built.text).toContain(
+      "(u.first_name ILIKE $1 ESCAPE '\\' OR u.last_name ILIKE $1 ESCAPE '\\')",
+    );
+    expect(built.text).toContain(
+      "(u.first_name ILIKE $2 ESCAPE '\\' OR u.last_name ILIKE $2 ESCAPE '\\')",
+    );
+    expect(built.text).toContain(") AND (");
+    expect(built.values).toEqual(["%Alan%", "%Wilson%", 21]);
+  });
+
   it("builds facet queries from the same active filters", () => {
     const [hobbies, nationalities] = buildFacetsQueries(query);
     expect(hobbies.text).toContain("COUNT(DISTINCT u.id)");

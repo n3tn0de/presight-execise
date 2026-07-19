@@ -14,9 +14,10 @@ function filters(
   alias = "u",
 ): string {
   const clauses: string[] = [];
-  if (query.q) {
+  const searchTerms = query.q.trim().split(/\s+/).filter(Boolean);
+  for (const term of searchTerms) {
     values.push(
-      `%${query.q.replace(/[\\%_]/g, (character) => `\\${character}`)}%`,
+      `%${term.replace(/[\\%_]/g, (character) => `\\${character}`)}%`,
     );
     clauses.push(
       `(${alias}.first_name ILIKE $${values.length} ESCAPE '\\' OR ${alias}.last_name ILIKE $${values.length} ESCAPE '\\')`,
