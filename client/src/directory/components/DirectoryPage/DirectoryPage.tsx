@@ -46,6 +46,7 @@ export function DirectoryPage() {
       <main className="directory-layout">
         <FacetSidebar
           facets={state.facets}
+          facetsLoaded={state.facetsLoaded}
           facetsLoading={state.facetsLoading}
           facetsError={state.facetsError}
           onRetry={retry}

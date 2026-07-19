@@ -11,10 +11,14 @@ export function FacetGroup({
   selected: string[];
   onChange: (value: string, checked: boolean) => void;
 }) {
+  const sortedValues = [...values].sort((left, right) =>
+    left.value.localeCompare(right.value),
+  );
+
   return (
     <fieldset className="facet-group">
       <legend>{title}</legend>
-      {values.map((facet) => (
+      {sortedValues.map((facet) => (
         <label key={facet.value} className="facet-option">
           <input
             type="checkbox"

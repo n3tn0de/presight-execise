@@ -1,8 +1,10 @@
 import "@testing-library/jest-dom/vitest";
-import { render, screen } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { cleanup, render, screen } from "@testing-library/react";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import type { FacetsResponse } from "@presight/shared";
 import { FacetSidebar } from "./FacetSidebar";
+
+afterEach(cleanup);
 
 const facets: FacetsResponse = {
   nationalities: Array.from({ length: 21 }, (_, index) => ({
@@ -21,6 +23,7 @@ describe("FacetSidebar", () => {
       <FacetSidebar
         facets={facets}
         query={{ nationality: [], hobby: [] }}
+        facetsLoaded
         facetsLoading={false}
         facetsError={null}
         onRetry={vi.fn()}
@@ -31,5 +34,22 @@ describe("FacetSidebar", () => {
     expect(screen.getByText("Nationality 21")).toBeInTheDocument();
     expect(screen.getByText("Hobby 21")).toBeInTheDocument();
     expect(screen.getAllByRole("checkbox")).toHaveLength(42);
+  });
+
+  it("keeps existing facets visible during refetch", () => {
+    render(
+      <FacetSidebar
+        facets={facets}
+        query={{ nationality: [], hobby: [] }}
+        facetsLoaded
+        facetsLoading
+        facetsError={null}
+        onRetry={vi.fn()}
+        onChange={vi.fn()}
+      />,
+    );
+
+    expect(screen.queryByText("Loading filters...")).not.toBeInTheDocument();
+    expect(screen.getByText("Nationality 21")).toBeInTheDocument();
   });
 });

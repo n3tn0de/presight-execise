@@ -1,5 +1,9 @@
 import { useRef } from "react";
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import {
+  keepPreviousData,
+  useInfiniteQuery,
+  useQuery,
+} from "@tanstack/react-query";
 import type {
   DirectoryQuery,
   FacetsResponse,
@@ -55,6 +59,7 @@ export function useDirectoryQuery(query: DirectoryQuery) {
   const facetsQuery = useQuery({
     queryKey: ["directory", "facets", facetState(query)],
     queryFn: ({ signal }) => directoryApi.facets(query, signal),
+    placeholderData: keepPreviousData,
   });
   const appendInFlight = useRef(false);
 
@@ -68,6 +73,7 @@ export function useDirectoryQuery(query: DirectoryQuery) {
   return {
     users,
     facets: facetsQuery.data ?? EMPTY_FACETS,
+    facetsLoaded: facetsQuery.data !== undefined,
     loading: usersQuery.isPending || usersQuery.isRefetching,
     loadingMore: usersQuery.isFetchingNextPage,
     facetsLoading: facetsQuery.isPending || facetsQuery.isRefetching,

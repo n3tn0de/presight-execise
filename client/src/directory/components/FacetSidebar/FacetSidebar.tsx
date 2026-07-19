@@ -4,6 +4,7 @@ import { FacetGroup } from "../FacetGroup/FacetGroup";
 export function FacetSidebar({
   facets,
   query,
+  facetsLoaded,
   facetsLoading,
   facetsError,
   onRetry,
@@ -11,6 +12,7 @@ export function FacetSidebar({
 }: {
   facets: FacetsResponse;
   query: { nationality: string[]; hobby: string[] };
+  facetsLoaded: boolean;
   facetsLoading: boolean;
   facetsError: string | null;
   onRetry: () => void;
@@ -26,7 +28,7 @@ export function FacetSidebar({
         <span className="eyebrow">Refine results</span>
         <h2>Filters</h2>
       </div>
-      {facetsLoading && (
+      {facetsLoading && !facetsLoaded && (
         <div className="state-panel" role="status" aria-live="polite">
           Loading filters...
         </div>
