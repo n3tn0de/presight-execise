@@ -3,7 +3,9 @@ import { cwd } from 'node:process';
 import { resolve } from "node:path";
 import type { ServerEnv } from "./types";
 
-config({ path: resolve(cwd(), "../.env") });
+export const environmentFilePath = resolve(cwd(), "../.env")
+
+config({ path: environmentFilePath });
 
 export function parseEnv(values: NodeJS.ProcessEnv): ServerEnv {
   const required = [
