@@ -84,6 +84,7 @@ export function DirectoryPage() {
           ) : (
             <UserVirtualList
               users={state.users}
+              selectedHobbies={query.hobby}
               hasMore={state.hasMore}
               loadingMore={state.loadingMore}
               appendError={state.appendError}

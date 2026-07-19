@@ -4,6 +4,7 @@ import { UserCard } from "../UserCard/UserCard";
 
 export function UserVirtualList({
   users,
+  selectedHobbies,
   hasMore,
   loadingMore,
   appendError,
@@ -11,6 +12,7 @@ export function UserVirtualList({
   onRetry,
 }: {
   users: UserSummary[];
+  selectedHobbies: string[];
   hasMore: boolean;
   loadingMore: boolean;
   appendError: string | null;
@@ -39,11 +41,18 @@ export function UserVirtualList({
           overscanCount={4}
           rowCount={rowCount}
           rowHeight={112}
-          rowProps={{ users, hasMore, loadingMore, appendError }}
+          rowProps={{
+            users,
+            selectedHobbies,
+            hasMore,
+            loadingMore,
+            appendError,
+          }}
           rowComponent={({
             index,
             style,
             users: rows,
+            selectedHobbies: activeHobbies,
             hasMore: more,
             loadingMore: moreLoading,
             appendError: rowError,
@@ -74,7 +83,7 @@ export function UserVirtualList({
               );
             return (
               <div data-testid="virtual-row" className="user-row" style={style}>
-                <UserCard user={rows[index]} />
+                <UserCard user={rows[index]} selectedHobbies={activeHobbies} />
               </div>
             );
           }}

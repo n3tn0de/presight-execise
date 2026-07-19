@@ -10,12 +10,14 @@ interface MockListProps {
     index: number;
     style: Record<string, string | number>;
     users: unknown[];
+    selectedHobbies: string[];
     hasMore: boolean;
     loadingMore: boolean;
     appendError: string | null;
   }) => React.ReactNode;
   rowProps: {
     users: unknown[];
+    selectedHobbies: string[];
     hasMore: boolean;
     loadingMore: boolean;
     appendError: string | null;
@@ -67,6 +69,7 @@ describe("UserVirtualList", () => {
             hobbies: [],
           },
         ]}
+        selectedHobbies={[]}
         hasMore={false}
         loadingMore={false}
         appendError={null}

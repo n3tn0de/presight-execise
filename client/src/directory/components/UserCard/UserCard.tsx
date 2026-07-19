@@ -1,9 +1,22 @@
 import type { UserSummary } from "@presight/shared";
 import { HobbiesTooltip } from "../HobbiesTooltip/HobbiesTooltip";
 
-export function UserCard({ user }: { user: UserSummary }) {
-  const visibleHobbies = user.hobbies.slice(0, 2);
-  const remainingHobbies = user.hobbies.slice(2);
+export function UserCard({
+  user,
+  selectedHobbies = [],
+}: {
+  user: UserSummary;
+  selectedHobbies?: string[];
+}) {
+  const selected = new Set(selectedHobbies);
+  const orderedHobbies = [...user.hobbies].sort((left, right) => {
+    const leftSelected = selected.has(left) ? 0 : 1;
+    const rightSelected = selected.has(right) ? 0 : 1;
+    if (leftSelected !== rightSelected) return leftSelected - rightSelected;
+    return left.localeCompare(right);
+  });
+  const visibleHobbies = orderedHobbies.slice(0, 2);
+  const remainingHobbies = orderedHobbies.slice(2);
   return (
     <article className="user-card">
       {user.avatar ? (
