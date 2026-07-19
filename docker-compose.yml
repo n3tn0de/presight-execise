@@ -13,6 +13,7 @@ services:
       context: .
       args:
         NODE_VERSION: *node-version
+        ALPINE_APK_ARGS: --no-check-certificate
     restart: no
     network_mode: none
     labels:
