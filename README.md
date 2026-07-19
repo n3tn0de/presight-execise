@@ -99,10 +99,20 @@ Install dependencies from the repository root:
 yarn install
 ```
 
-Copy the example environment file and review the local defaults:
+Copy the example environment file, then edit it with your local settings:
 
 ```bash
 cp .example.env .env
+```
+
+`DATABASE_URL` and all other settings belong in `.env`; do not export them in
+the shell. For example, update the copied file with values like:
+
+```dotenv
+DATABASE_URL=postgres://postgres:postgres@localhost:5432/presight
+SERVER_HOST=localhost
+SERVER_PORT=3000
+VITE_API_URL=http://localhost:3000
 ```
 
 Environment variables:
@@ -120,7 +130,6 @@ Create a local Postgres database if needed:
 
 ```bash
 createdb presight
-export DATABASE_URL=postgres://postgres:postgres@localhost:5432/presight
 ```
 
 Lerna runs the workspace scripts from the repository root:

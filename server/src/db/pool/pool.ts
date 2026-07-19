@@ -22,13 +22,18 @@ export async function withTransaction<T>(
         `Transaction failed and rollback failed: ${formatError(error)}; ${formatError(rollbackError)}`,
       );
     }
-    throw new Error(`Transaction failed: ${formatError(error)}`, { cause: error });
+    throw new Error(`Transaction failed: ${formatError(error)}`, {
+      cause: error,
+    });
   } finally {
     client.release();
   }
 }
 
-export async function query<T extends QueryResultRow>(text: string, values: unknown[] = []) {
+export async function query<T extends QueryResultRow>(
+  text: string,
+  values: unknown[] = [],
+) {
   assertDatabaseUrl();
   return pool.query<T>(text, values);
 }

@@ -1,4 +1,8 @@
-import type { DirectoryQuery, FacetsResponse, UserSummary } from '@presight/shared';
+import type {
+  DirectoryQuery,
+  FacetsResponse,
+  UserSummary,
+} from "@presight/shared";
 
 export interface DirectoryState {
   query: DirectoryQuery;
@@ -15,10 +19,16 @@ export interface DirectoryState {
 }
 
 export type DirectoryAction =
-  | { type: 'queryChanged'; query: DirectoryQuery }
-  | { type: 'usersStarted'; append: boolean }
-  | { type: 'usersSucceeded'; items: UserSummary[]; hasMore: boolean; nextCursor: string | null; append: boolean }
-  | { type: 'usersFailed'; message: string; append: boolean }
-  | { type: 'facetsStarted' }
-  | { type: 'facetsSucceeded'; facets: FacetsResponse }
-  | { type: 'facetsFailed'; message: string };
+  | { type: "queryChanged"; query: DirectoryQuery }
+  | { type: "usersStarted"; append: boolean }
+  | {
+      type: "usersSucceeded";
+      items: UserSummary[];
+      hasMore: boolean;
+      nextCursor: string | null;
+      append: boolean;
+    }
+  | { type: "usersFailed"; message: string; append: boolean }
+  | { type: "facetsStarted" }
+  | { type: "facetsSucceeded"; facets: FacetsResponse }
+  | { type: "facetsFailed"; message: string };

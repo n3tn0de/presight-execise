@@ -1,14 +1,15 @@
-import type { DirectoryQuery, FacetsResponse, UserSummary } from "@presight/shared";
+import type {
+  DirectoryQuery,
+  FacetsResponse,
+  UserSummary,
+} from "@presight/shared";
 export type { DirectoryCursor } from "./database/types";
 import type { DirectoryCursor } from "./database/types";
 
 export type { DirectoryQuery, FacetsResponse, UserSummary };
 
 export interface Queryable {
-  query<T = unknown>(
-    text: string,
-    values?: unknown[],
-  ): Promise<{ rows: T[] }>;
+  query<T = unknown>(text: string, values?: unknown[]): Promise<{ rows: T[] }>;
 }
 
 export interface UserRepository {
@@ -18,5 +19,7 @@ export interface UserRepository {
 export interface FacetsRepository {
   get(query: DirectoryQuery): Promise<FacetsResponse>;
   hobbies?(query: DirectoryQuery): Promise<FacetsResponse["hobbies"]>;
-  nationalities?(query: DirectoryQuery): Promise<FacetsResponse["nationalities"]>;
+  nationalities?(
+    query: DirectoryQuery,
+  ): Promise<FacetsResponse["nationalities"]>;
 }

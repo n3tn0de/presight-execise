@@ -1,21 +1,21 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from "vitest";
 import type {
   ApiErrorResponse,
   DirectoryQuery,
   FacetsResponse,
   UsersResponse,
-} from './api';
+} from "./api";
 
-describe('API contracts', () => {
-  it('supports paginated users, facets, and structured errors', () => {
+describe("API contracts", () => {
+  it("supports paginated users, facets, and structured errors", () => {
     const query: DirectoryQuery = {
-      q: 'Ada',
+      q: "Ada",
       nationality: [],
       hobby: [],
-      sortBy: 'first_name',
-      sortDir: 'asc',
+      sortBy: "first_name",
+      sortDir: "asc",
       limit: 20,
-      cursor: 'next-page',
+      cursor: "next-page",
     };
     const users: UsersResponse = {
       items: [],
@@ -23,16 +23,20 @@ describe('API contracts', () => {
       nextCursor: null,
     };
     const facets: FacetsResponse = {
-      hobbies: [{ value: 'Chess', count: 2 }],
-      nationalities: [{ value: 'Canadian', count: 3 }],
+      hobbies: [{ value: "Chess", count: 2 }],
+      nationalities: [{ value: "Canadian", count: 3 }],
     };
     const error: ApiErrorResponse = {
-      error: { code: 'INVALID_QUERY', message: 'Invalid query', details: { field: 'limit' } },
+      error: {
+        code: "INVALID_QUERY",
+        message: "Invalid query",
+        details: { field: "limit" },
+      },
     };
 
-    expect(query.cursor).toBe('next-page');
+    expect(query.cursor).toBe("next-page");
     expect(users.hasMore).toBe(false);
-    expect(facets.hobbies[0]).toEqual({ value: 'Chess', count: 2 });
-    expect(error.error.code).toBe('INVALID_QUERY');
+    expect(facets.hobbies[0]).toEqual({ value: "Chess", count: 2 });
+    expect(error.error.code).toBe("INVALID_QUERY");
   });
 });

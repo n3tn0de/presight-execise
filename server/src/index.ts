@@ -7,7 +7,9 @@ export function startServer(port = env.SERVER_PORT) {
   const server = createDatabaseApp(pool).listen(port, env.SERVER_HOST);
 
   async function shutdown() {
-    await new Promise<void>((resolve, reject) => server.close((error) => error ? reject(error) : resolve()));
+    await new Promise<void>((resolve, reject) =>
+      server.close((error) => (error ? reject(error) : resolve())),
+    );
     await pool.end();
   }
 

@@ -1,6 +1,9 @@
-import type { DirectoryQuery } from '@presight/shared';
+import type { DirectoryQuery } from "@presight/shared";
 
-export interface BuiltQuery { text: string; values: unknown[] }
+export interface BuiltQuery {
+  text: string;
+  values: unknown[];
+}
 
 export interface DirectoryCursor {
   sortValue: string | number;
@@ -9,6 +12,6 @@ export interface DirectoryCursor {
 
 export interface CursorPayload extends DirectoryCursor {
   signature: string;
-  sortBy: DirectoryQuery['sortBy'];
-  sortDir: DirectoryQuery['sortDir'];
+  sortBy: DirectoryQuery["sortBy"];
+  sortDir: DirectoryQuery["sortDir"];
 }

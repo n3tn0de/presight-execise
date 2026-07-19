@@ -1,5 +1,5 @@
-export type SortField = 'first_name' | 'last_name' | 'age' | 'nationality';
-export type SortDirection = 'asc' | 'desc';
+export type SortField = "first_name" | "last_name" | "age" | "nationality";
+export type SortDirection = "asc" | "desc";
 
 export interface DirectoryQuery {
   q: string;
@@ -38,4 +38,4 @@ export interface FacetsResponse {
   nationalities: FacetValue[];
 }
 
-export type { ApiError, ApiErrorResponse } from './errors';
+export type { ApiError, ApiErrorResponse } from "./errors";

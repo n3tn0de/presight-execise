@@ -16,8 +16,14 @@ describe("directory SQL builder", () => {
     expect(built.text).toContain("u.first_name ILIKE $1");
     expect(built.text).toContain("u.nationality = ANY($2::text[])");
     expect(built.text.match(/EXISTS \(/g)).toHaveLength(2);
-    expect(built.text).toContain('ORDER BY u.last_name DESC, u.id DESC');
-    expect(built.values).toEqual(["%Ada%", ["Canadian", "French"], "Chess", "Reading", 21]);
+    expect(built.text).toContain("ORDER BY u.last_name DESC, u.id DESC");
+    expect(built.values).toEqual([
+      "%Ada%",
+      ["Canadian", "French"],
+      "Chess",
+      "Reading",
+      21,
+    ]);
     expect(built.text).not.toContain("Ada");
   });
 
@@ -31,7 +37,9 @@ describe("directory SQL builder", () => {
     const [hobbies, nationalities] = buildFacetsQueries(query);
     expect(hobbies.text).toContain("COUNT(DISTINCT u.id)");
     expect(hobbies.text).toContain("JOIN user_hobbies facet_hobby");
-    expect(hobbies.text.indexOf("JOIN")).toBeLessThan(hobbies.text.indexOf("WHERE"));
+    expect(hobbies.text.indexOf("JOIN")).toBeLessThan(
+      hobbies.text.indexOf("WHERE"),
+    );
     expect(nationalities.text).toContain("u.nationality");
     expect(hobbies.values).toEqual(nationalities.values);
   });

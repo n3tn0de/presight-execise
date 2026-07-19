@@ -24,7 +24,11 @@ describe("generateSeedData", () => {
 
     expect(Math.min(...data.users.map((user) => user.age))).toBe(18);
     expect(Math.max(...data.users.map((user) => user.age))).toBe(100);
-    expect(counts).toEqual(new Set(Array.from({ length: 11 }, (_, index) => index)));
-    expect(data.hobbies).toEqual([...new Set(data.users.flatMap((user) => user.hobbies))]);
+    expect(counts).toEqual(
+      new Set(Array.from({ length: 11 }, (_, index) => index)),
+    );
+    expect(data.hobbies).toEqual([
+      ...new Set(data.users.flatMap((user) => user.hobbies)),
+    ]);
   });
 });

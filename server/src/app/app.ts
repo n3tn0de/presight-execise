@@ -3,7 +3,11 @@ import type { Pool } from "pg";
 import { createFacetsRepository } from "../directory/repositories/facets-repository";
 import { createDirectoryService } from "../directory/service/directory-service";
 import { createUsersRepository } from "../directory/repositories/users-repository";
-import type { FacetsResponse, DirectoryQuery, UsersResponse } from "@presight/shared";
+import type {
+  FacetsResponse,
+  DirectoryQuery,
+  UsersResponse,
+} from "@presight/shared";
 import { errorMiddleware } from "../middleware/errors";
 import { facetsRouter } from "../routes/facets";
 import { healthRouter } from "../routes/health";
@@ -21,6 +25,14 @@ export function createApp(dependencies: AppDependencies): express.Express {
 }
 
 export function createDatabaseApp(pool: Pool): express.Express {
-  const service = createDirectoryService(createUsersRepository(pool), createFacetsRepository(pool));
-  return createApp({ service, healthCheck: async () => { await pool.query("SELECT 1"); } });
+  const service = createDirectoryService(
+    createUsersRepository(pool),
+    createFacetsRepository(pool),
+  );
+  return createApp({
+    service,
+    healthCheck: async () => {
+      await pool.query("SELECT 1");
+    },
+  });
 }

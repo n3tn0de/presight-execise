@@ -7,7 +7,9 @@ describe("database migrations", () => {
     const sql = migrationSql("001_initial.sql");
 
     expect(sql).toContain("CREATE EXTENSION IF NOT EXISTS pg_trgm");
-    expect(sql).toContain("age INTEGER NOT NULL CHECK (age BETWEEN 18 AND 100)");
+    expect(sql).toContain(
+      "age INTEGER NOT NULL CHECK (age BETWEEN 18 AND 100)",
+    );
     expect(sql).toContain("PRIMARY KEY (user_id, hobby_value)");
     expect(sql).toContain("ON DELETE CASCADE");
     expect(sql).toContain("gin_trgm_ops");
@@ -18,7 +20,11 @@ describe("database migrations", () => {
   });
 
   it("rejects migration paths outside the internal filename pattern", () => {
-    expect(() => migrationSql("../users.sql")).toThrow("Invalid migration filename");
-    expect(() => migrationSql("notes.sql")).toThrow("Invalid migration filename");
+    expect(() => migrationSql("../users.sql")).toThrow(
+      "Invalid migration filename",
+    );
+    expect(() => migrationSql("notes.sql")).toThrow(
+      "Invalid migration filename",
+    );
   });
 });

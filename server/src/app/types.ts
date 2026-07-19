@@ -1,4 +1,8 @@
-import type { DirectoryQuery, FacetsResponse, UsersResponse } from "@presight/shared";
+import type {
+  DirectoryQuery,
+  FacetsResponse,
+  UsersResponse,
+} from "@presight/shared";
 
 export interface DirectoryService {
   list(query: DirectoryQuery): Promise<UsersResponse>;
