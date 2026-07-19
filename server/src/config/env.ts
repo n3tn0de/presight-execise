@@ -1,5 +1,14 @@
-import "dotenv/config";
+import dotenv from "dotenv";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import type { ServerEnv } from "./types";
+
+export const environmentFilePath = resolve(
+  dirname(fileURLToPath(import.meta.url)),
+  "../../../.env",
+);
+
+dotenv.config({ path: environmentFilePath });
 
 export function parseEnv(values: NodeJS.ProcessEnv): ServerEnv {
   const required = [
@@ -9,6 +18,7 @@ export function parseEnv(values: NodeJS.ProcessEnv): ServerEnv {
     "SERVER_HOST",
     "SERVER_PORT",
   ] as const;
+
   for (const name of required) {
     if (!values[name]) throw new Error(`${name} is required`);
   }

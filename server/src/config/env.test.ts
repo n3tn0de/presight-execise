@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { parseEnv } from "./env";
+import { environmentFilePath, parseEnv } from "./env";
 
 describe("parseEnv", () => {
   const validValues = {
@@ -27,5 +27,9 @@ describe("parseEnv", () => {
   it("uses a safe default for the seed count", () => {
     expect(parseEnv(validValues).SEED_COUNT).toBe(10_000);
     expect(parseEnv({ ...validValues, SEED_COUNT: "25" }).SEED_COUNT).toBe(25);
+  });
+
+  it("resolves the repository root environment file", () => {
+    expect(environmentFilePath).toMatch(/presight-execise[\\/]\.env$/);
   });
 });
