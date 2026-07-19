@@ -214,6 +214,25 @@
   resolved "https://registry.yarnpkg.com/@csstools/css-tokenizer/-/css-tokenizer-3.0.4.tgz#333fedabc3fd1a8e5d0100013731cf19e6a8c5d3"
   integrity sha512-Vd/9EVDiu6PPJt9yAh6roZP6El1xHrdvIVGjyBsHR0RYwNHgL7FJPyIIW4fANJNG6FtyZfvlRPpFI4ZM/lubvw==
 
+"@dotenvx/dotenvx@^2.14.0":
+  version "2.14.0"
+  resolved "https://registry.yarnpkg.com/@dotenvx/dotenvx/-/dotenvx-2.14.0.tgz#8305f1b0da6a501c0e232711708d07c989ae5959"
+  integrity sha512-cNXKhPSSwl5H8udv31bLnBz8SW/R/9Ijbi96rUIovmG62i8B5zcp9IvWY3tAe/i4IPZaROGaJNZIsOD8OuUR2g==
+  dependencies:
+    "@dotenvx/primitives" "^2.1.0"
+    "@dotenvx/tooling" "^1.0.2"
+    yocto-spinner "^1.2.1"
+
+"@dotenvx/primitives@^2.1.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@dotenvx/primitives/-/primitives-2.1.0.tgz#f9042c43a0842f84f92794d8d36d0857f8df9b39"
+  integrity sha512-GIpMSSgjZk4URRCtAw12vBmobnw3VeSKL+p7/y8ypWvTHFW+StAMZvq4wCjdX+QKuw4alXu0IMGW6QPhKo6ufg==
+
+"@dotenvx/tooling@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@dotenvx/tooling/-/tooling-1.0.2.tgz#10d65cacfadc03f227981aa3326315dfa754088a"
+  integrity sha512-yf4VwIZUzSqlLy2pe0kH2xk6dME73oYW5XqcHE7M1zA1H0RX/dSUThsSRmpCjp622iW9f6VGQl5Aa6szt5Xc0w==
+
 "@emnapi/core@1.11.1":
   version "1.11.1"
   resolved "https://registry.yarnpkg.com/@emnapi/core/-/core-1.11.1.tgz#b9e1064f3a6b1631e241e638eb48d736bfd372a6"
@@ -2621,7 +2640,7 @@ dotenv-expand@~11.0.6:
   dependencies:
     dotenv "^16.4.5"
 
-dotenv@^16.4.5, dotenv@^16.5.0:
+dotenv@^16.4.5:
   version "16.6.1"
   resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-16.6.1.tgz#773f0e69527a8315c7285d5ee73c4459d20a8020"
   integrity sha512-uBq4egWHTcTt33a72vpSG0z3HnPuIl6NqYcTrKEg2azoEyl2hpW0zqlxysq2pK9HlDIHyHyakeYaYnSAwd8bow==
@@ -6663,6 +6682,18 @@ yocto-queue@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/yocto-queue/-/yocto-queue-0.1.0.tgz#0294eb3dee05028d31ee1a5fa2c556a6aaf10a1b"
   integrity sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==
+
+yocto-spinner@^1.2.1:
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/yocto-spinner/-/yocto-spinner-1.2.2.tgz#9bc73bdccf03066cc0dae344e571269ff4ef94aa"
+  integrity sha512-DODGl1wJjA/s5pnJFKau9lIYHT81lnhob1i3e1TjxZRxEhWRKl74nTbWE6H5KlkViQQTo/Z29YFdxzTZAMY3ng==
+  dependencies:
+    yoctocolors "^2.1.1"
+
+yoctocolors@^2.1.1:
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/yoctocolors/-/yoctocolors-2.1.2.tgz#d795f54d173494e7d8db93150cec0ed7f678c83a"
+  integrity sha512-CzhO+pFNo8ajLM2d2IW/R93ipy99LWjtwblvC1RsoSUMZgyLbYFr221TnSNT7GjGdYui6P459mw9JH/g/zW2ug==
 
 "zod-validation-error@^3.5.0 || ^4.0.0":
   version "4.0.2"

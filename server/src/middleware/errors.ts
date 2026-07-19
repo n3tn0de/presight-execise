@@ -11,7 +11,7 @@ export const errorMiddleware: ErrorRequestHandler = (
   console.error("API request failed", {
     method: request.method,
     path: request.originalUrl,
-    error,
+    error: serializeError(error),
   });
 
   if (isDatabaseUnavailable(error)) {
@@ -56,7 +56,7 @@ export const errorMiddleware: ErrorRequestHandler = (
 function isDatabaseUnavailable(error: unknown): boolean {
   if (!error || typeof error !== "object") return false;
   const code = "code" in error ? error.code : undefined;
-  return (
+  if (
     code === "ECONNREFUSED" ||
     code === "ECONNRESET" ||
     code === "ETIMEDOUT" ||
@@ -69,5 +69,50 @@ function isDatabaseUnavailable(error: unknown): boolean {
     code === "08007" ||
     code === "08P01" ||
     code === "57P03"
-  );
+  ) {
+    return true;
+  }
+
+  return error instanceof AggregateError
+    ? error.errors.some(isDatabaseUnavailable)
+    : false;
+}
+
+type SerializedError = {
+  name: string;
+  message: string;
+  code?: string;
+  stack?: string;
+  errors?: SerializedError[];
+};
+
+function serializeError(
+  error: unknown,
+  seen = new WeakSet<object>(),
+): SerializedError {
+  if (!(error instanceof Error)) {
+    return { name: "UnknownError", message: String(error) };
+  }
+
+  if (seen.has(error)) {
+    return { name: error.name, message: "[Circular error]" };
+  }
+  seen.add(error);
+
+  const serialized: SerializedError = {
+    name: error.name,
+    message: error.message,
+    ...(typeof error.stack === "string" ? { stack: error.stack } : {}),
+    ...("code" in error && typeof error.code === "string"
+      ? { code: error.code }
+      : {}),
+  };
+
+  if (error instanceof AggregateError) {
+    serialized.errors = error.errors.map((nestedError) =>
+      serializeError(nestedError, seen),
+    );
+  }
+
+  return serialized;
 }

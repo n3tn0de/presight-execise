@@ -4,7 +4,6 @@ import type {
   UsersResponse,
 } from "@presight/shared";
 import { serializeDirectoryQuery } from "@presight/shared";
-import { env } from "../../config/env";
 
 function queryString(query: DirectoryQuery): string {
   const serialized = serializeDirectoryQuery(query);
@@ -16,7 +15,7 @@ async function get<T>(
   query: DirectoryQuery,
   signal?: AbortSignal,
 ): Promise<T> {
-  const response = await fetch(`${env.API_URL}${path}${queryString(query)}`, {
+  const response = await fetch(`${path}${queryString(query)}`, {
     signal,
   });
   if (!response.ok) throw new Error(`Request failed (${response.status})`);

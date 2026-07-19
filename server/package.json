@@ -14,8 +14,8 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
+    "@dotenvx/dotenvx": "^2.14.0",
     "@presight/shared": "1.0.0",
-    "dotenv": "^16.5.0",
     "express": "~5.1.0",
     "pg": "^8.13.3",
     "zod": "^3.24.3"

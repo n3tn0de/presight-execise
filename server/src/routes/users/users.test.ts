@@ -144,9 +144,17 @@ describe("API routes", () => {
 
   it("returns a database unavailable response and logs connection errors", async () => {
     const log = vi.spyOn(console, "error").mockImplementation(() => undefined);
-    const databaseError = Object.assign(new Error("connect ECONNREFUSED"), {
-      code: "ECONNREFUSED",
-    });
+    const databaseError = new AggregateError(
+      [
+        Object.assign(new Error("connect ECONNREFUSED"), {
+          code: "ECONNREFUSED",
+        }),
+        Object.assign(new Error("connect ECONNRESET"), {
+          code: "ECONNRESET",
+        }),
+      ],
+      "database connection failed",
+    );
     const list = vi.fn().mockRejectedValue(databaseError);
     const response = await request(
       createApp({ service: { list, facets: vi.fn() }, healthCheck: vi.fn() }),
@@ -159,14 +167,21 @@ describe("API routes", () => {
         message: "Database is unavailable. Check your PostgreSQL connection.",
       },
     });
-    expect(log).toHaveBeenCalledWith(
-      "API request failed",
-      expect.objectContaining({
-        method: "GET",
-        path: "/api/users",
-        error: databaseError,
-      }),
-    );
+    const loggedDetails = log.mock.calls[0][1] as {
+      method: string;
+      path: string;
+      error: { errors?: Array<{ message: string; code?: string }> };
+    };
+    expect(loggedDetails).toMatchObject({
+      method: "GET",
+      path: "/api/users",
+      error: {
+        errors: [
+          { message: "connect ECONNREFUSED", code: "ECONNREFUSED" },
+          { message: "connect ECONNRESET", code: "ECONNRESET" },
+        ],
+      },
+    });
     log.mockRestore();
   });
 
