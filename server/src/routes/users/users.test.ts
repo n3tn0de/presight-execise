@@ -142,8 +142,36 @@ describe("API routes", () => {
     expect(list).not.toHaveBeenCalled();
   });
 
-  it("hides database errors behind a generic 500 response", async () => {
-    const list = vi.fn().mockRejectedValue(new Error("secret database detail"));
+  it("returns a database unavailable response and logs connection errors", async () => {
+    const log = vi.spyOn(console, "error").mockImplementation(() => undefined);
+    const databaseError = Object.assign(new Error("connect ECONNREFUSED"), {
+      code: "ECONNREFUSED",
+    });
+    const list = vi.fn().mockRejectedValue(databaseError);
+    const response = await request(
+      createApp({ service: { list, facets: vi.fn() }, healthCheck: vi.fn() }),
+      "/api/users",
+    );
+    expect(response.status).toBe(503);
+    expect(await response.json()).toEqual({
+      error: {
+        code: "DATABASE_UNAVAILABLE",
+        message: "Database is unavailable. Check your PostgreSQL connection.",
+      },
+    });
+    expect(log).toHaveBeenCalledWith(
+      "API request failed",
+      expect.objectContaining({
+        method: "GET",
+        path: "/api/users",
+        error: databaseError,
+      }),
+    );
+    log.mockRestore();
+  });
+
+  it("keeps unrelated errors as generic 500 responses", async () => {
+    const list = vi.fn().mockRejectedValue(new Error("secret internal detail"));
     const response = await request(
       createApp({ service: { list, facets: vi.fn() }, healthCheck: vi.fn() }),
       "/api/users",

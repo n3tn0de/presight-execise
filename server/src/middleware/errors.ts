@@ -3,11 +3,27 @@ import { CursorError } from "../directory/database/cursor";
 
 export const errorMiddleware: ErrorRequestHandler = (
   error,
-  _request,
+  request,
   response,
   next,
 ) => {
   void next;
+  console.error("API request failed", {
+    method: request.method,
+    path: request.originalUrl,
+    error,
+  });
+
+  if (isDatabaseUnavailable(error)) {
+    response.status(503).json({
+      error: {
+        code: "DATABASE_UNAVAILABLE",
+        message: "Database is unavailable. Check your PostgreSQL connection.",
+      },
+    });
+    return;
+  }
+
   if (error instanceof CursorError) {
     response
       .status(400)
@@ -36,3 +52,22 @@ export const errorMiddleware: ErrorRequestHandler = (
     error: { code: "INTERNAL_ERROR", message: "Internal server error" },
   });
 };
+
+function isDatabaseUnavailable(error: unknown): boolean {
+  if (!error || typeof error !== "object") return false;
+  const code = "code" in error ? error.code : undefined;
+  return (
+    code === "ECONNREFUSED" ||
+    code === "ECONNRESET" ||
+    code === "ETIMEDOUT" ||
+    code === "57P01" ||
+    code === "08000" ||
+    code === "08001" ||
+    code === "08003" ||
+    code === "08004" ||
+    code === "08006" ||
+    code === "08007" ||
+    code === "08P01" ||
+    code === "57P03"
+  );
+}
