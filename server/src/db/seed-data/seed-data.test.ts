@@ -8,14 +8,8 @@ describe("generateSeedData", () => {
 
     expect(first).toEqual(second);
     expect(first.users).toHaveLength(10_000);
-    expect(first.users[0]).toEqual({
-      avatar: "https://i.pravatar.cc/150?img=1",
-      firstName: "Ada",
-      lastName: "Smith",
-      age: 18,
-      nationality: "Canadian",
-      hobbies: [],
-    });
+    expect(first.users[0]).toEqual(second.users[0]);
+    expect(first.users[0].avatar).toBe("https://i.pravatar.cc/150?img=1");
   });
 
   it("keeps ages in range and assigns zero through ten hobbies", () => {
@@ -27,8 +21,24 @@ describe("generateSeedData", () => {
     expect(counts).toEqual(
       new Set(Array.from({ length: 11 }, (_, index) => index)),
     );
-    expect(data.hobbies).toEqual([
-      ...new Set(data.users.flatMap((user) => user.hobbies)),
-    ]);
+    expect(new Set(data.hobbies)).toEqual(
+      new Set(data.users.flatMap((user) => user.hobbies)),
+    );
+  });
+
+  it("creates a deterministic but non-uniform nationality distribution", () => {
+    const data = generateSeedData();
+    const counts = new Map<string, number>();
+    for (const user of data.users) {
+      counts.set(user.nationality, (counts.get(user.nationality) ?? 0) + 1);
+    }
+
+    const values = [...counts.values()];
+    expect(new Set(values).size).toBeGreaterThan(1);
+    expect(Math.max(...values) - Math.min(...values)).toBeGreaterThan(100);
+    expect(counts.size).toBe(8);
+    expect(generateSeedData().users.map((user) => user.nationality)).toEqual(
+      data.users.map((user) => user.nationality),
+    );
   });
 });

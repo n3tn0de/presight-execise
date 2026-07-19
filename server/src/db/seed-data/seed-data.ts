@@ -32,6 +32,7 @@ const nationalities = [
   "Indian",
   "Australian",
 ];
+const nationalityWeights = [18, 16, 14, 13, 12, 11, 9, 7];
 const hobbyPool = [
   "Chess",
   "Cycling",
@@ -47,19 +48,47 @@ const hobbyPool = [
 
 export function generateSeedData(count = 10_000): SeedData {
   const users: SeedUser[] = [];
+  const random = createRandom(0x5eed1234);
 
   for (let index = 0; index < count; index += 1) {
-    const hobbyCount = index % (hobbyPool.length + 1);
+    const hobbyCount = Math.floor(random() * (hobbyPool.length + 1));
+    const hobbies = shuffle(hobbyPool, random).slice(0, hobbyCount).sort();
     users.push({
       avatar: `https://i.pravatar.cc/150?img=${(index % 70) + 1}`,
-      firstName: firstNames[index % firstNames.length],
-      lastName:
-        lastNames[Math.floor(index / firstNames.length) % lastNames.length],
-      age: 18 + (index % 83),
-      nationality: nationalities[index % nationalities.length],
-      hobbies: hobbyPool.slice(0, hobbyCount),
+      firstName: firstNames[Math.floor(random() * firstNames.length)],
+      lastName: lastNames[Math.floor(random() * lastNames.length)],
+      age: 18 + Math.floor(random() * 83),
+      nationality: weightedNationality(random()),
+      hobbies,
     });
   }
 
   return { users, hobbies: hobbyPool };
+}
+
+function createRandom(seed: number): () => number {
+  let state = seed >>> 0;
+  return () => {
+    state = (state * 1664525 + 1013904223) >>> 0;
+    return state / 2 ** 32;
+  };
+}
+
+function weightedNationality(value: number): string {
+  const total = nationalityWeights.reduce((sum, weight) => sum + weight, 0);
+  let target = value * total;
+  for (let index = 0; index < nationalities.length; index += 1) {
+    target -= nationalityWeights[index];
+    if (target < 0) return nationalities[index];
+  }
+  return nationalities[nationalities.length - 1];
+}
+
+function shuffle<T>(values: T[], random: () => number): T[] {
+  const result = [...values];
+  for (let index = result.length - 1; index > 0; index -= 1) {
+    const swapIndex = Math.floor(random() * (index + 1));
+    [result[index], result[swapIndex]] = [result[swapIndex], result[index]];
+  }
+  return result;
 }
