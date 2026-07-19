@@ -20,9 +20,11 @@ export function DirectoryToolbar({
         />
       </label>
       <div className="sort-controls">
-        <label>
+        <label htmlFor="directory-sort">
           Sort:{" "}
           <select
+            id="directory-sort"
+            aria-label="Sort"
             value={query.sortBy}
             onChange={(event) =>
               onQueryChange({ sortBy: event.target.value as SortField })

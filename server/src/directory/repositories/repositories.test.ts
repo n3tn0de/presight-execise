@@ -52,5 +52,9 @@ describe("directory repositories", () => {
     expect(await facets.hobbies!(query)).toEqual([
       { value: "Chess", count: 3 },
     ]);
+    expect(db.query).toHaveBeenCalledWith(
+      expect.not.stringMatching(/LIMIT\s+20/i),
+      [],
+    );
   });
 });

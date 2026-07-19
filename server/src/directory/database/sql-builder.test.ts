@@ -41,6 +41,16 @@ describe("directory SQL builder", () => {
       hobbies.text.indexOf("WHERE"),
     );
     expect(nationalities.text).toContain("u.nationality");
-    expect(hobbies.values).toEqual(nationalities.values);
+    expect(hobbies.text).toContain("ORDER BY count DESC, value ASC");
+    expect(nationalities.text).toContain("ORDER BY count DESC, value ASC");
+    expect(hobbies.text).not.toMatch(/LIMIT\s+20/i);
+    expect(nationalities.text).not.toMatch(/LIMIT\s+20/i);
+    expect(hobbies.text).toContain("u.first_name ILIKE $1");
+    expect(hobbies.text).toContain("u.nationality = ANY($2::text[])");
+    expect(hobbies.text.match(/EXISTS \(/g)).toBeNull();
+    expect(nationalities.text).not.toContain("u.nationality = ANY($2::text[])");
+    expect(nationalities.text.match(/EXISTS \(/g)).toHaveLength(2);
+    expect(hobbies.values).toEqual(["%Ada%", ["Canadian", "French"]]);
+    expect(nationalities.values).toEqual(["%Ada%", "Chess", "Reading"]);
   });
 });

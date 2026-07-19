@@ -63,8 +63,15 @@ function facetBase(
   query: DirectoryQuery,
   values: unknown[],
   join = "",
+  facet?: "hobby" | "nationality",
 ): string {
-  return `FROM users u ${join} ${filters(query, values)}`;
+  const facetQuery = facet
+    ? {
+        ...query,
+        ...(facet === "hobby" ? { hobby: [] } : { nationality: [] }),
+      }
+    : query;
+  return `FROM users u ${join} ${filters(facetQuery, values)}`;
 }
 
 export function buildFacetsQueries(
@@ -75,15 +82,21 @@ export function buildFacetsQueries(
     query,
     hobbyValues,
     "JOIN user_hobbies facet_hobby ON facet_hobby.user_id = u.id",
+    "hobby",
   );
   const hobbies: BuiltQuery = {
-    text: `SELECT facet_hobby.hobby_value AS value, COUNT(DISTINCT u.id)::int AS count ${hobbyBase} GROUP BY facet_hobby.hobby_value ORDER BY count DESC, value ASC LIMIT 20`,
+    text: `SELECT facet_hobby.hobby_value AS value, COUNT(DISTINCT u.id)::int AS count ${hobbyBase} GROUP BY facet_hobby.hobby_value ORDER BY count DESC, value ASC`,
     values: hobbyValues,
   };
   const nationalityValues: unknown[] = [];
-  const nationalityBase = facetBase(query, nationalityValues);
+  const nationalityBase = facetBase(
+    query,
+    nationalityValues,
+    "",
+    "nationality",
+  );
   const nationalities: BuiltQuery = {
-    text: `SELECT u.nationality AS value, COUNT(DISTINCT u.id)::int AS count ${nationalityBase} GROUP BY u.nationality ORDER BY count DESC, value ASC LIMIT 20`,
+    text: `SELECT u.nationality AS value, COUNT(DISTINCT u.id)::int AS count ${nationalityBase} GROUP BY u.nationality ORDER BY count DESC, value ASC`,
     values: nationalityValues,
   };
   return [hobbies, nationalities];

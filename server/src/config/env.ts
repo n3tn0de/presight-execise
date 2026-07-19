@@ -1,9 +1,14 @@
-import { config } from '@dotenvx/dotenvx'
-import {cwd} from 'node:process';
-import { resolve } from "node:path";
+import { config } from "@dotenvx/dotenvx";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import type { ServerEnv } from "./types";
 
-config({ path: resolve(cwd(), '../.env') });
+export const environmentFilePath = resolve(
+  dirname(fileURLToPath(import.meta.url)),
+  "../../../.env",
+);
+
+config({ path: environmentFilePath });
 
 export function parseEnv(values: NodeJS.ProcessEnv): ServerEnv {
   const required = [

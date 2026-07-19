@@ -41,10 +41,10 @@ Expose an API that supports:
 - Filtering by one or more hobbies.
 - Sorting by `first_name`, `last_name`, `age`, and `nationality`.
 - Pagination metadata so the client can determine whether more results are available.
-- Top 20 hobbies for the active text filter and filter state, including `{ value, count }`.
-- Top 20 nationalities for the active text filter and filter state, including `{ value, count }`.
+- All hobbies for the active text filter and filter state, including `{ value, count }`.
+- All nationalities for the active text filter and filter state, including `{ value, count }`.
 
-The top 20 values and counts must reflect the currently applied text filter and selected filters, not the global dataset.
+All values and counts must reflect the currently applied text filter and selected filters, not the global dataset.
 
 Filter semantics:
 
@@ -63,7 +63,7 @@ Build a React interface that includes:
 
 - A text filter input for `first_name` and `last_name`.
 - A virtualized, infinitely scrolling list of user cards.
-- A sidebar containing the top 20 hobbies and top 20 nationalities for the current result set, including counts.
+- A sidebar containing all hobbies and nationalities for the current result set, including counts.
 - Controls for applying and removing hobby and nationality filters.
 - Controls for choosing sort field and sort direction.
 - Loading, empty, and error states.
@@ -87,7 +87,7 @@ Use a virtual scroll implementation for the list.
 When the text filter or selected filters change, the client must refresh both:
 
 - The paginated user list.
-- The top 20 hobbies and nationalities in the sidebar.
+- All hobbies and nationalities in the sidebar.
 
 The text filter value, selected hobbies, selected nationalities, sort field, and sort direction must be reflected in the URL query string. Reloading or sharing the URL should restore the same view state.
 
@@ -166,7 +166,7 @@ Docker and Docker Compose are explicitly deferred and are not included.
 We will pay particular attention to:
 
 - Correct data persistence and API behavior.
-- Correct filtering, sorting, pagination, and top 20 counts.
+- Correct filtering, sorting, pagination, and facet counts.
 - Smooth infinite scrolling with virtualization.
 - URL-synced state.
 - Clear loading, empty, and error states.

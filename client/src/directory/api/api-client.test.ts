@@ -16,9 +16,9 @@ describe("directory API client", () => {
     });
     await directoryApi.facets(DEFAULT_DIRECTORY_QUERY);
     expect(fetchMock.mock.calls[0][0]).toBe(
-      "http://localhost:3000/api/users?nationality=Canadian&q=Ada",
+      "/api/users?nationality=Canadian&q=Ada",
     );
-    expect(fetchMock.mock.calls[1][0]).toBe("http://localhost:3000/api/facets");
+    expect(fetchMock.mock.calls[1][0]).toBe("/api/facets");
   });
 
   it("adds a cursor only to the subsequent users request", () => {
