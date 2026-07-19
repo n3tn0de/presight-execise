@@ -1,5 +1,5 @@
 import type { ErrorRequestHandler } from "express";
-import { CursorError } from "../directory/cursor.js";
+import { CursorError } from "../directory/database/cursor";
 
 export const errorMiddleware: ErrorRequestHandler = (error, _request, response, _next) => {
   if (error instanceof CursorError) {

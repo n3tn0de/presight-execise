@@ -1,6 +1,6 @@
 import type { DirectoryQuery } from "@presight/shared";
 import { DEFAULT_DIRECTORY_QUERY, MAX_DIRECTORY_LIMIT, MIN_DIRECTORY_LIMIT } from "@presight/shared";
-import { CursorError } from "./directory/cursor.js";
+import { CursorError } from "./directory/database/cursor";
 
 class InvalidQueryError extends Error {
   readonly code = "INVALID_QUERY";

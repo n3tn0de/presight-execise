@@ -1,9 +1,10 @@
 import { fileURLToPath } from "node:url";
-import { createDatabaseApp } from "./app.js";
-import { pool } from "./db/pool.js";
+import { createDatabaseApp } from "./app/app";
+import { env } from "./config/env";
+import { pool } from "./db/pool/pool";
 
-export function startServer(port = Number(process.env.PORT ?? 3000)) {
-  const server = createDatabaseApp(pool).listen(port);
+export function startServer(port = env.SERVER_PORT) {
+  const server = createDatabaseApp(pool).listen(port, env.SERVER_HOST);
 
   async function shutdown() {
     await new Promise<void>((resolve, reject) => server.close((error) => error ? reject(error) : resolve()));

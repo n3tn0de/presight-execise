@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { parseApiQuery } from "../query.js";
-import type { DirectoryService } from "../app.js";
+import { parseApiQuery } from "../query";
+import type { DirectoryService } from "../app/types";
 
 export function facetsRouter(service: DirectoryService): Router {
   const router = Router();
