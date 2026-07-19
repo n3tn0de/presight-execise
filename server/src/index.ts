@@ -4,6 +4,10 @@ import { env } from "./config/env";
 import { pool } from "./db/pool/pool";
 
 export function startServer(port = env.SERVER_PORT) {
+  console.log({
+    port,
+    host: env.SERVER_HOST
+  })
   const server = createDatabaseApp(pool).listen(port, env.SERVER_HOST);
 
   async function shutdown() {
