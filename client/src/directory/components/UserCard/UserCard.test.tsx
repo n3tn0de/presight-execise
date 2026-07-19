@@ -53,4 +53,24 @@ describe("UserCard", () => {
     fireEvent.click(moreButton);
     expect(screen.getByRole("tooltip")).toHaveTextContent("Skiing");
   });
+
+  it("highlights visible hobbies matching selected filters", () => {
+    render(
+      <UserCard
+        user={{
+          id: "selected",
+          avatar: "avatar.jpg",
+          firstName: "Ada",
+          lastName: "Lovelace",
+          age: 36,
+          nationality: "British",
+          hobbies: ["Chess", "Reading", "Writing"],
+        }}
+        selectedHobbies={["Reading"]}
+      />,
+    );
+
+    expect(screen.getByText("Reading")).toHaveClass("tag--selected");
+    expect(screen.getByText("Chess")).not.toHaveClass("tag--selected");
+  });
 });

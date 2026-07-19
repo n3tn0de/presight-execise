@@ -190,6 +190,12 @@ select {
   background: #e9ede7;
   color: #78847b;
 }
+.tag--selected {
+  background: #c5e86c;
+  color: #263a31;
+  box-shadow: 0 0 0 1px #84a93d;
+  font-weight: 700;
+}
 .hobbies-more {
   border: 0;
   cursor: pointer;

@@ -38,13 +38,17 @@ export function UserCard({
         </p>
         <div className="hobbies" aria-label="Hobbies">
           {visibleHobbies.map((hobby) => (
-            <span className="tag" key={hobby}>
+            <span
+              className={`tag${selected.has(hobby) ? " tag--selected" : ""}`}
+              key={hobby}
+            >
               {hobby}
             </span>
           ))}
           {remainingHobbies.length > 0 && (
             <HobbiesTooltip
               hobbies={remainingHobbies}
+              selectedHobbies={selectedHobbies}
               id={`hobbies-${user.id}`}
             />
           )}

@@ -2,11 +2,14 @@ import { useEffect, useRef, useState } from "react";
 
 export function HobbiesTooltip({
   hobbies,
+  selectedHobbies = [],
   id,
 }: {
   hobbies: string[];
+  selectedHobbies?: string[];
   id: string;
 }) {
+  const selected = new Set(selectedHobbies);
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLSpanElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -52,7 +55,10 @@ export function HobbiesTooltip({
       {open && (
         <span id={id} className="hobbies-tooltip" role="tooltip">
           {hobbies.map((hobby) => (
-            <span className="tag" key={hobby}>
+            <span
+              className={`tag${selected.has(hobby) ? " tag--selected" : ""}`}
+              key={hobby}
+            >
               {hobby}
             </span>
           ))}

@@ -7,7 +7,13 @@ afterEach(cleanup);
 
 describe("HobbiesTooltip", () => {
   it("keeps the native title and renders remaining hobbies as pills locally", () => {
-    render(<HobbiesTooltip hobbies={["Cycling", "Hiking"]} id="hobbies-1" />);
+    render(
+      <HobbiesTooltip
+        hobbies={["Cycling", "Hiking"]}
+        selectedHobbies={["Hiking"]}
+        id="hobbies-1"
+      />,
+    );
 
     const button = screen.getByRole("button", { name: "Show 2 more hobbies" });
     expect(button).toHaveAttribute("title", "Cycling, Hiking");
@@ -18,6 +24,8 @@ describe("HobbiesTooltip", () => {
     expect(tooltip).toHaveTextContent("Cycling");
     expect(tooltip).toHaveTextContent("Hiking");
     expect(tooltip.querySelectorAll(".tag")).toHaveLength(2);
+    expect(screen.getByText("Hiking")).toHaveClass("tag--selected");
+    expect(screen.getByText("Cycling")).not.toHaveClass("tag--selected");
   });
 
   it("closes on outside click and Escape", () => {
