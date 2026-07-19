@@ -9,6 +9,11 @@
 * {
   box-sizing: border-box;
 }
+html,
+body,
+#root {
+  min-height: 100%;
+}
 body {
   margin: 0;
 }
@@ -19,8 +24,11 @@ select {
 }
 .app-shell {
   max-width: 1440px;
+  min-height: 100vh;
   margin: auto;
   padding: 32px 48px 64px;
+  display: flex;
+  flex-direction: column;
 }
 .site-header {
   display: flex;
@@ -56,9 +64,16 @@ h1 {
   font-weight: 700;
 }
 .directory-layout {
+  flex: 1;
+  min-height: 0;
   display: grid;
   grid-template-columns: 240px minmax(0, 1fr);
   gap: 44px;
+}
+.results {
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
 }
 .sidebar {
   padding-top: 10px;
@@ -144,8 +159,9 @@ select {
   white-space: nowrap;
 }
 .directory-list {
-  height: min(67vh, 700px);
-  min-height: 400px;
+  flex: 1;
+  min-height: 0;
+  height: auto;
   margin-top: 16px;
 }
 .user-card {
@@ -262,6 +278,9 @@ select {
     padding-bottom: 28px;
   }
   .directory-layout {
+    display: block;
+  }
+  .results {
     display: block;
   }
   .sidebar {
