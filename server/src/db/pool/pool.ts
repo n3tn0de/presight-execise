@@ -20,6 +20,7 @@ export async function withTransaction<T>(
     } catch (rollbackError) {
       throw new Error(
         `Transaction failed and rollback failed: ${formatError(error)}; ${formatError(rollbackError)}`,
+        { cause: error },
       );
     }
     throw new Error(`Transaction failed: ${formatError(error)}`, {

@@ -17,6 +17,25 @@ export default tseslint.config(
   eslint.configs.recommended,
   ...tseslint.configs.recommended,
   {
+    rules: {
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        {
+          argsIgnorePattern: "^_",
+          caughtErrorsIgnorePattern: "^_",
+          varsIgnorePattern: "^_",
+        },
+      ],
+      "preserve-caught-error": "off",
+    },
+  },
+  {
+    files: ["**/*.test.{ts,tsx}"],
+    rules: {
+      "@typescript-eslint/no-explicit-any": "off",
+    },
+  },
+  {
     files: ["client/**/*.{ts,tsx}"],
     ...reactHooks.configs.flat.recommended,
     plugins: { "react-refresh": reactRefresh },
@@ -25,13 +44,6 @@ export default tseslint.config(
         "warn",
         { allowConstantExport: true },
       ],
-    },
-  },
-  {
-    rules: {
-      "@typescript-eslint/no-explicit-any": "off",
-      "@typescript-eslint/no-unused-vars": "off",
-      "preserve-caught-error": "off",
     },
   },
   prettier,

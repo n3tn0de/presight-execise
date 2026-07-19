@@ -3,11 +3,6 @@ import type { Pool } from "pg";
 import { createFacetsRepository } from "../directory/repositories/facets-repository";
 import { createDirectoryService } from "../directory/service/directory-service";
 import { createUsersRepository } from "../directory/repositories/users-repository";
-import type {
-  FacetsResponse,
-  DirectoryQuery,
-  UsersResponse,
-} from "@presight/shared";
 import { errorMiddleware } from "../middleware/errors";
 import { facetsRouter } from "../routes/facets";
 import { healthRouter } from "../routes/health";

@@ -1,4 +1,4 @@
-import type { DirectoryQuery, UserSummary } from "@presight/shared";
+import type { UserSummary } from "@presight/shared";
 import { buildUsersQuery } from "../database/sql-builder";
 import type { Queryable, UserRepository } from "../types";
 

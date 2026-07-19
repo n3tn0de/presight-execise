@@ -1,8 +1,4 @@
-import type {
-  DirectoryQuery,
-  FacetsResponse,
-  UserSummary,
-} from "@presight/shared";
+import type { DirectoryQuery, FacetsResponse } from "@presight/shared";
 import type { DirectoryAction, DirectoryState } from "./types";
 
 export const EMPTY_FACETS: FacetsResponse = { hobbies: [], nationalities: [] };

@@ -99,6 +99,13 @@ Install dependencies from the repository root:
 yarn install
 ```
 
+Optional: use [nvm](https://github.com/nvm-sh/nvm) to match the project’s recommended Node.js version:
+
+```bash
+nvm install
+nvm use
+```
+
 Copy the example environment file, then edit it with your local settings:
 
 ```bash
