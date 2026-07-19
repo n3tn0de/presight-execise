@@ -82,7 +82,8 @@ describe("directory cursor", () => {
     ],
   ])(
     "rejects %s as a controlled cursor error",
-    (payload: unknown, _description: string) => {
+    (payload: unknown, description: string) => {
+      void description;
       const cursor = Buffer.from(JSON.stringify(payload)).toString("base64url");
       expect(() =>
         decodeCursor(cursor, {

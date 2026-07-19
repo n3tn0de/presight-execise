@@ -3,8 +3,27 @@ import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { UserVirtualList } from "./UserVirtualList";
 
+interface MockListProps {
+  defaultHeight: number;
+  overscanCount: number;
+  rowComponent: (props: {
+    index: number;
+    style: Record<string, string | number>;
+    users: unknown[];
+    hasMore: boolean;
+    loadingMore: boolean;
+    appendError: string | null;
+  }) => React.ReactNode;
+  rowProps: {
+    users: unknown[];
+    hasMore: boolean;
+    loadingMore: boolean;
+    appendError: string | null;
+  };
+}
+
 vi.mock("react-window", () => ({
-  List: (props: any) => (
+  List: (props: MockListProps) => (
     <div
       data-testid="virtual-list"
       data-height={props.defaultHeight}

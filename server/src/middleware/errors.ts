@@ -5,8 +5,9 @@ export const errorMiddleware: ErrorRequestHandler = (
   error,
   _request,
   response,
-  _next,
+  next,
 ) => {
+  void next;
   if (error instanceof CursorError) {
     response
       .status(400)

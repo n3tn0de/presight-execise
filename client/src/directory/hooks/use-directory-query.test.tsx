@@ -3,10 +3,14 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { DEFAULT_DIRECTORY_QUERY } from "@presight/shared";
 import { useDirectoryQuery } from "./use-directory-query";
 import { directoryApi } from "../api/api-client";
+import type { DirectoryQuery } from "@presight/shared";
 
 vi.mock("../api/api-client", () => ({
   directoryApi: { users: vi.fn(), facets: vi.fn() },
-  appendCursor: (query: any, cursor: string) => ({ ...query, cursor }),
+  appendCursor: (query: DirectoryQuery, cursor: string) => ({
+    ...query,
+    cursor,
+  }),
 }));
 
 describe("useDirectoryQuery append requests", () => {
@@ -31,8 +35,8 @@ describe("useDirectoryQuery append requests", () => {
       nextCursor: "next",
     });
     vi.mocked(directoryApi.users)
-      .mockReturnValueOnce(initial as any)
-      .mockReturnValue(new Promise(() => {}) as any);
+      .mockReturnValueOnce(initial)
+      .mockReturnValue(new Promise(() => {}));
     vi.mocked(directoryApi.facets).mockResolvedValue({
       hobbies: [],
       nationalities: [],
