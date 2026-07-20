@@ -18,6 +18,7 @@ Simply run
 ```bash
 cp .example.env .env
 docker compose up -d
+docker compose exec api yarn db:migrate
 docker compose exec api yarn db:seed
 ```
 
