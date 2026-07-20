@@ -25,5 +25,5 @@ FROM install_dependencies
 WORKDIR /app
 
 RUN yarn install --immutable
-
 COPY . .
+RUN yarn build --scope @presight/shared

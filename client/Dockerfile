@@ -4,6 +4,7 @@ ARG BASE_IMAGE=presight-base
 FROM ${BASE_IMAGE} AS client
 
 WORKDIR /app
+RUN yarn check --verify-tree
 RUN yarn --pure-lockfile
 RUN yarn --cwd client build
 
